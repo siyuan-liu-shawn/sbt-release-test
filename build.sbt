@@ -21,9 +21,12 @@ releaseNextVersion := {
 releaseProcess := Seq[ReleaseStep](
     sbtrelease.ReleaseStateTransformations.checkSnapshotDependencies,
     sbtrelease.ReleaseStateTransformations.inquireVersions,
+    sbtrelease.ReleaseStateTransformations.runClean,
+    sbtrelease.ReleaseStateTransformations.runTest,
     sbtrelease.ReleaseStateTransformations.setReleaseVersion,
     sbtrelease.ReleaseStateTransformations.commitReleaseVersion,
     sbtrelease.ReleaseStateTransformations.tagRelease,
+    //sbtrelease.ReleaseStateTransformations.publishArtifacts,
     sbtrelease.ReleaseStateTransformations.setNextVersion,
     sbtrelease.ReleaseStateTransformations.commitNextVersion,
     //sbtrelease.ReleaseStateTransformations.pushChanges
