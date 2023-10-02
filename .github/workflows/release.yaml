@@ -33,4 +33,4 @@ jobs:
 
       # 执行sbt-release
       - name: Run sbt-release
-        run: sbt release
+        run: sbt release with-defaults
