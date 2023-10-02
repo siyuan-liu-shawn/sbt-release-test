@@ -31,6 +31,30 @@ jobs:
       - name: Setting repo parent dir as safe safe.directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      # 执行sbt-release
+      # sbt-releaseを実行
       - name: Run sbt-release
-        run: sbt release with-defaults
+        run: sbt "release with-defaults"
+
+      - name: Set CDC_VERSION
+        id: set_version
+        run: |
+          CDC_VERSION=$(grep -oP 'version := "\K[^"-]+' version.sbt)
+          echo "Set version value to github env file."
+          echo "CDC_VERSION=$CDC_VERSION" >> $GITHUB_ENV
+          echo "Enable output var"
+          echo "::set-output name=CDC_VERSION::$CDC_VERSION"
+
+
+      - name: Create new branch
+        run: |
+          git checkout -b release_$CDC_VERSION
+          git push origin release_$CDC_VERSION
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "release_${{ steps.set_version.outputs.CDC_VERSION }}"
+          destination_branch: "main"
+          pr_title: "Release CDC pipeline to ${{ steps.set_version.outputs.CDC_VERSION }}"
+          pr_body: "SSIA"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
