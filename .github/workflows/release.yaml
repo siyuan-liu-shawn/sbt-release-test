@@ -46,8 +46,10 @@ jobs:
           echo "Set user.name=${{ github.actor }}"
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-    
+          
           git checkout -b release_$CDC_VERSION
+          git push --set-upstream origin release_$CDC_VERSION
+          git push -u
 
       # sbt-releaseを実行
       - name: Run sbt-release
