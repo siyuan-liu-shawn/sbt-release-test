@@ -10,16 +10,14 @@ lazy val root = project
 
 import ReleaseTransformations.*
 import sbtrelease.*
-// bump the version, eg. 1.2.1 -> 1.2.2
-releaseVersionBump := Version.Bump.Next
 
-// strip the qualifier off the input version, eg. 1.2.1-SNAPSHOT -> 1.2.1
-releaseVersion     := { ver => sbtrelease.Version(ver).map(_.withoutQualifier.string).getOrElse(versionFormatError(ver)) }
-
-// bump the version and append '-SNAPSHOT'
-releaseNextVersion := {
-    ver => Version(ver).map(_.bump(releaseVersionBump.value).asSnapshot.string).getOrElse(versionFormatError(ver))
-}
+releaseVersionBump := (System.getenv("RELEASE_TYPE") match {
+    case "Major" => Version.Bump.Major
+    case "Minor" => Version.Bump.Minor
+    case "Bugfix" => Version.Bump.Bugfix
+    case "Nano" => Version.Bump.Nano
+    case _ => Version.Bump.Next // eg. 1.2.1 -> 1.2.2
+})
 
 // Customize the release process
 releaseProcess := Seq[ReleaseStep](

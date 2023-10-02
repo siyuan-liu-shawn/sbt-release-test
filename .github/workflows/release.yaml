@@ -2,6 +2,11 @@ name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Please choose release type (Major / Minor / Bugfix / Nano / Next)'
+        required: true
+        default: 'Next'
 
 permissions:
   id-token: write
@@ -16,6 +21,9 @@ jobs:
       image: openjdk:11
 
     steps:
+      - name: Set release type as env variable
+        run: echo "RELEASE_TYPE=${{ inputs.releaseType }}" >> $GITHUB_ENV
+
       - name: Install sbt
         run: |
           echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list
@@ -38,7 +46,7 @@ jobs:
           echo "Set version value to github env file."
           echo "CDC_VERSION=$CDC_VERSION" >> $GITHUB_ENV
           echo "Enable output var"
-          echo "::set-output name=CDC_VERSION::$CDC_VERSION"
+          echo "CDC_VERSION=$CDC_VERSION" >> $GITHUB_OUTPUT
 
 
       - name: Set git config and create new branch
