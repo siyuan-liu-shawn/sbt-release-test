@@ -48,8 +48,7 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           
           git checkout -b release_$CDC_VERSION
-          git push --set-upstream origin release_$CDC_VERSION
-          git push -u
+          git push --set-upstream -u --force origin release_$CDC_VERSION
 
       # sbt-releaseを実行
       - name: Run sbt-release
@@ -62,4 +61,4 @@ jobs:
           destination_branch: "main"
           pr_title: "Release CDC pipeline to ${{ steps.set_version.outputs.CDC_VERSION }}"
           pr_body: "SSIA"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.MY_GITHUB_TOKEN }}
