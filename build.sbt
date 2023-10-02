@@ -12,8 +12,11 @@ releaseVersionBump := sbtrelease.Version.Bump.Next
 
 releaseProcess := Seq[ReleaseStep](
     sbtrelease.ReleaseStateTransformations.checkSnapshotDependencies,
+    sbtrelease.ReleaseStateTransformations.inquireVersions,
+    sbtrelease.ReleaseStateTransformations.setReleaseVersion,
     sbtrelease.ReleaseStateTransformations.commitReleaseVersion,
     sbtrelease.ReleaseStateTransformations.tagRelease,
+    sbtrelease.ReleaseStateTransformations.setNextVersion,
     sbtrelease.ReleaseStateTransformations.commitNextVersion,
     //sbtrelease.ReleaseStateTransformations.pushChanges
 )
