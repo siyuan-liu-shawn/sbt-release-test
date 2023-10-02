@@ -8,16 +8,18 @@ lazy val root = project
     libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
   )
 
-// bump the version and append '-SNAPSHOT', eg. 1.2.1 -> 1.2.2
+// bump the version, eg. 1.2.1 -> 1.2.2
 releaseVersionBump := sbtrelease.Version.Bump.Next
 
 // strip the qualifier off the input version, eg. 1.2.1-SNAPSHOT -> 1.2.1
 releaseVersion     := { ver => sbtrelease.Version(ver).map(_.withoutQualifier.string).getOrElse(sbtrelease.versionFormatError(ver)) }
 
+// bump the version and append '-SNAPSHOT'
 releaseNextVersion := {
     ver => sbtrelease.Version(ver).map(_.bump(releaseVersionBump.value).asSnapshot.string).getOrElse(sbtrelease.versionFormatError(ver))
 }
 
+// Customize the release process. Comment publish artifacts and push.
 import ReleaseTransformations._
 releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
