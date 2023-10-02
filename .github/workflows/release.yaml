@@ -43,16 +43,9 @@ jobs:
 
       - name: Set git config and create new branch
         run: |
-          apt-get install -y jq
           echo "Set user.name=${{ github.actor }}"
           git config user.name "${{ github.actor }}"
-          
-          echo "curl log:"
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }}
-          
-          email=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }} | jq .email -r)
-          echo "Set user.email=$email"
-          git config user.email "$email"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
     
           git checkout -b release_$CDC_VERSION
 
