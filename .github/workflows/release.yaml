@@ -16,7 +16,9 @@ permissions:
 jobs:
   release:
     runs-on:
-      - ubuntu-latest
+      - prod
+      - standard
+      - self-hosted
     container:
       image: openjdk:11
 
@@ -58,7 +60,6 @@ jobs:
           git checkout -b release_$CDC_VERSION
           git push --set-upstream -u --force origin release_$CDC_VERSION
 
-      # sbt-releaseを実行
       - name: Run sbt-release
         run: sbt "release with-defaults"
 
@@ -69,4 +70,4 @@ jobs:
           destination_branch: "main"
           pr_title: "Release CDC pipeline to ${{ steps.set_version.outputs.CDC_VERSION }}"
           pr_body: "SSIA"
-          github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
